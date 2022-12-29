@@ -28,9 +28,12 @@ func NewGateway(log logger.Logger, appData gogen.ApplicationData, cfg *config.Co
 	if err != nil {
 		panic("Failed to create a connection to database")
 	}
-	db.AutoMigrate(entity.Product{},entity.Order{})
+	err = db.AutoMigrate(entity.Product{},entity.Order{})
+	if err != nil {
+		panic(err)
+	}
 	return &gateway{
-		GormWithTransaction : database.NewGormWithTransaction(db, log),
+		GormWithTransaction: database.NewGormWithTransaction(db, log),
 		log:     log,
 		appData: appData,
 		config:  cfg,
